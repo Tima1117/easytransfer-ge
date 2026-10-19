@@ -62,7 +62,8 @@ export default function Reviews() {
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex items-center gap-3 rounded-2xl border border-ink/10 bg-white px-5 py-3"
+            data-magnetic
+            className="spot flex items-center gap-3 rounded-2xl border border-ink/10 bg-white px-5 py-3 hover:border-gold/40"
           >
             <span className="font-display text-2xl font-extrabold text-ink">4.9</span>
             <span className="text-left text-[12px] leading-tight text-ink/60">
@@ -81,11 +82,11 @@ export default function Reviews() {
           {loop.map((r, i) => (
             <div
               key={`${r.id}-${i}`}
-              className="flex w-[320px] shrink-0 flex-col gap-4 rounded-2xl border border-ink/10 bg-white p-6 sm:w-[360px]"
+              className="spot group flex w-[320px] shrink-0 flex-col gap-4 rounded-2xl border border-ink/10 bg-white p-6 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1.5 hover:border-gold/40 hover:shadow-[0_22px_50px_-22px_rgba(21,27,22,0.4)] sm:w-[360px]"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-ink text-[12px] font-semibold text-gold">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-ink text-[12px] font-semibold text-gold transition-[background-color,color,rotate] duration-300 group-hover:-rotate-6 group-hover:bg-gold group-hover:text-ink">
                     {initials(r.author)}
                   </span>
                   <div>

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useInView, animate } from "framer-motion";
 import { useLanguage } from "@/lib/language-context";
+import TiltCard from "@/components/fx/TiltCard";
 
 function StatCounter({ value, label, delay }: { value: string; label: string; delay: number }) {
   const ref = useRef<HTMLSpanElement | null>(null);
@@ -31,7 +32,7 @@ function StatCounter({ value, label, delay }: { value: string; label: string; de
   }, [inView, hasNumber, numeric, delay, value]);
 
   return (
-    <div className="text-center sm:text-left">
+    <div className="spot rounded-2xl border border-cream/10 bg-cream/[0.02] p-5 text-center transition-colors duration-300 hover:border-gold/30 sm:text-left">
       <span ref={ref} className="font-display block text-[clamp(26px,3vw,34px)] font-extrabold text-gold">
         {display}
         {hasNumber ? suffix : ""}
@@ -60,7 +61,7 @@ export default function About() {
           <p className="mt-5 text-[15px] leading-relaxed text-cream/70">{t.about.body}</p>
         </div>
 
-        <div className="mt-9 grid grid-cols-2 gap-6 sm:grid-cols-4">
+        <div className="mt-9 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
           {t.about.stats.map((s, i) => (
             <StatCounter key={i} value={s.value} label={s.label} delay={i * 0.08} />
           ))}
@@ -75,7 +76,7 @@ export default function About() {
               {t.about.languages.map((l, i) => (
                 <span
                   key={i}
-                  className="rounded-full border border-cream/20 px-3.5 py-1.5 text-[13px] text-cream/80"
+                  className="rounded-full border border-cream/20 px-3.5 py-1.5 text-[13px] text-cream/80 transition-colors duration-200 hover:border-gold hover:bg-gold/10 hover:text-cream"
                 >
                   {l}
                 </span>
@@ -91,7 +92,7 @@ export default function About() {
               {t.about.routes.map((r, i) => (
                 <span
                   key={i}
-                  className="rounded-full bg-cream/5 px-3.5 py-1.5 text-[13px] text-gold/90"
+                  className="rounded-full bg-cream/5 px-3.5 py-1.5 text-[13px] text-gold/90 transition-colors duration-200 hover:bg-gold hover:text-ink"
                 >
                   {r}
                 </span>
@@ -106,13 +107,13 @@ export default function About() {
           </p>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
             {t.about.fleet.map((f, i) => (
-              <motion.div
+              <TiltCard
                 key={f.name}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.45, delay: i * 0.08 }}
-                className="group overflow-hidden rounded-2xl border border-cream/12 bg-cream/[0.04]"
+                className="group overflow-hidden rounded-2xl border border-cream/12 bg-cream/[0.04] transition-colors duration-300 hover:border-gold/30"
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden">
                   <Image
@@ -134,7 +135,7 @@ export default function About() {
                     <p>{f.bags}</p>
                   </div>
                 </div>
-              </motion.div>
+              </TiltCard>
             ))}
           </div>
         </div>

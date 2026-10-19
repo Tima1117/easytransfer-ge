@@ -5,6 +5,9 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/lib/language-context";
 import { GALLERY } from "@/data/gallery";
+import TiltCard from "@/components/fx/TiltCard";
+
+const VIEW_LABEL = { en: "View", ru: "Смотреть", ka: "ნახვა" } as const;
 
 export default function Gallery() {
   const { t, lang } = useLanguage();
@@ -24,30 +27,39 @@ export default function Gallery() {
 
         <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
           {GALLERY.map((g, i) => (
-            <motion.button
+            <TiltCard
               key={g.id}
-              type="button"
-              onClick={() => setActive(i)}
+              max={7}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.4, delay: (i % 3) * 0.07 }}
-              className="group relative aspect-[4/3] overflow-hidden rounded-xl text-left"
+              className="group aspect-[4/3] overflow-hidden rounded-xl"
             >
-              <Image
-                src={g.src}
-                alt={g.name[lang]}
-                fill
-                sizes="(max-width: 640px) 50vw, 33vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/0 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-3">
-                <p className="font-display text-[13px] font-bold text-cream sm:text-sm">
-                  {g.name[lang]}
-                </p>
-              </div>
-            </motion.button>
+              <button
+                type="button"
+                onClick={() => setActive(i)}
+                data-cursor={VIEW_LABEL[lang]}
+                className="absolute inset-0 text-left"
+              >
+                <Image
+                  src={g.src}
+                  alt={g.name[lang]}
+                  fill
+                  sizes="(max-width: 640px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/0 to-transparent transition-opacity duration-300 group-hover:opacity-90" />
+                <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4">
+                  <p className="font-display text-[13px] font-bold text-cream sm:text-sm">
+                    {g.name[lang]}
+                  </p>
+                  <p className="mt-1 hidden max-h-0 overflow-hidden text-[12px] leading-snug text-cream/75 opacity-0 transition-all duration-300 group-hover:max-h-12 group-hover:opacity-100 sm:block">
+                    {g.caption[lang]}
+                  </p>
+                </div>
+              </button>
+            </TiltCard>
           ))}
         </div>
       </div>

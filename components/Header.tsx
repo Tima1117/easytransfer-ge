@@ -18,6 +18,7 @@ export default function Header() {
   const { lang, setLang, t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hovered, setHovered] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -40,8 +41,8 @@ export default function Header() {
       }`}
     >
       <div className="container-px mx-auto flex h-[68px] max-w-6xl items-center justify-between">
-        <a href="#top" className="font-display flex items-center gap-2 text-lg font-extrabold tracking-tight text-cream">
-          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-gold text-ink">
+        <a href="#top" className="group font-display flex items-center gap-2 text-lg font-extrabold tracking-tight text-cream">
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-gold text-ink transition-[rotate,scale] duration-300 group-hover:-rotate-12 group-hover:scale-110">
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
               <path d="M9 21 11 3M15 21 13 3" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
             </svg>
@@ -51,14 +52,24 @@ export default function Header() {
           </span>
         </a>
 
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav className="hidden items-center gap-1 lg:flex" onMouseLeave={() => setHovered(null)}>
           {SECTIONS.map((s) => (
             <a
               key={s.id}
               href={`#${s.id}`}
-              className="text-[12px] font-bold uppercase tracking-[0.1em] text-cream/70 transition-colors hover:text-gold"
+              onMouseEnter={() => setHovered(s.id)}
+              className={`relative rounded-full px-3.5 py-2 text-[12px] font-bold uppercase tracking-[0.1em] transition-colors ${
+                hovered === s.id ? "text-ink" : "text-cream/70"
+              }`}
             >
-              {t.nav[s.key]}
+              {hovered === s.id && (
+                <motion.span
+                  layoutId="nav-hover"
+                  className="absolute inset-0 rounded-full bg-gold"
+                  transition={{ type: "spring", stiffness: 450, damping: 34 }}
+                />
+              )}
+              <span className="relative">{t.nav[s.key]}</span>
             </a>
           ))}
         </nav>
@@ -80,10 +91,11 @@ export default function Header() {
           </div>
 
           <a
+            data-magnetic
             href={waLink("Hello! I'd like to book a transfer with EasyTransfer Georgia.")}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden items-center gap-2 rounded-full bg-whatsapp px-4 py-2 text-[13px] font-semibold text-white transition-transform hover:scale-[1.03] sm:inline-flex"
+            className="hidden items-center gap-2 rounded-full bg-whatsapp px-4 py-2 text-[13px] font-semibold text-white transition-transform hover:scale-[1.03] hover:shadow-[0_8px_24px_-6px_rgba(37,211,102,0.6)] sm:inline-flex"
           >
             {t.nav.book}
           </a>

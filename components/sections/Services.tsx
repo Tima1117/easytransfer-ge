@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/language-context";
 import { waLink } from "@/data/business";
 import { ROUTES, type RouteCategory } from "@/data/routes";
+import TiltCard from "@/components/fx/TiltCard";
 
 type Tab = "all" | RouteCategory;
 
@@ -42,11 +43,18 @@ export default function Services() {
                 key={tb.key}
                 type="button"
                 onClick={() => setTab(tb.key)}
-                className={`shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold transition-colors ${
-                  tab === tb.key ? "bg-ink text-gold" : "text-ink/55 hover:text-ink"
+                className={`relative shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold transition-colors ${
+                  tab === tb.key ? "text-gold" : "text-ink/55 hover:text-ink"
                 }`}
               >
-                {tb.label}
+                {tab === tb.key && (
+                  <motion.span
+                    layoutId="services-tab"
+                    className="absolute inset-0 rounded-full bg-ink"
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  />
+                )}
+                <span className="relative">{tb.label}</span>
               </button>
             ))}
           </div>
@@ -57,22 +65,23 @@ export default function Services() {
             const open = openId === route.id;
             const message = `EasyTransfer Georgia — ${route.title[lang]}\n${t.contact.form.date}: \n${t.contact.form.name}: \n${t.contact.form.phone}: `;
             return (
-              <motion.div
+              <TiltCard
                 key={route.id}
                 layout
+                max={4}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.45, delay: (i % 3) * 0.08 }}
-                className="flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white transition-shadow duration-300 hover:shadow-[0_24px_60px_-20px_rgba(21,27,22,0.35)]"
               >
-                <div className="relative aspect-[4/3] w-full">
+                <div className="relative aspect-[4/3] w-full overflow-hidden">
                   <Image
                     src={route.image}
                     alt={route.title[lang]}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent" />
                   <span className="absolute left-3 top-3 rounded-full bg-ink/70 px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-wide text-cream backdrop-blur-sm">
@@ -121,6 +130,7 @@ export default function Services() {
                       href={waLink(message)}
                       target="_blank"
                       rel="noopener noreferrer"
+                      data-magnetic
                       className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-whatsapp px-4 py-2.5 text-[12.5px] font-semibold text-white transition-transform hover:scale-[1.02]"
                     >
                       {t.services.bookCta}
@@ -134,7 +144,7 @@ export default function Services() {
                     </button>
                   </div>
                 </div>
-              </motion.div>
+              </TiltCard>
             );
           })}
         </div>

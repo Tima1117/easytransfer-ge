@@ -77,6 +77,11 @@ export default function Hero() {
   const tiltYRaw = useTransform(mx, [-0.5, 0.5], [-6, 6]);
   const tiltX = useTransform([tiltXRaw, tiltFade], (v) => (v[0] as number) * (v[1] as number));
   const tiltY = useTransform([tiltYRaw, tiltFade], (v) => (v[0] as number) * (v[1] as number));
+  // The wordmark drifts against the frame's tilt, so the two read as layers.
+  const smx = useSpring(mx, { stiffness: 120, damping: 20 });
+  const smy = useSpring(my, { stiffness: 120, damping: 20 });
+  const wordsX = useTransform(smx, [-0.5, 0.5], [22, -22]);
+  const wordsY = useTransform(smy, [-0.5, 0.5], [14, -14]);
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (reduced) return;
@@ -167,8 +172,9 @@ export default function Hero() {
         </div>
 
         {/* brand name, centred on top of the video */}
-        <h1
+        <motion.h1
           aria-label="EasyTransfer Georgia"
+          style={reduced ? undefined : { x: wordsX, y: wordsY }}
           className="pointer-events-none absolute inset-0 z-[3] m-0 flex flex-col items-center justify-center gap-1 sm:flex-row sm:gap-[1.6vw]"
         >
           <motion.span
@@ -185,7 +191,7 @@ export default function Hero() {
           >
             Transfer
           </motion.span>
-        </h1>
+        </motion.h1>
 
         {reduced && (
           <div className="absolute inset-0 z-[1] bg-gradient-to-t from-ink via-ink/20 to-ink/50" />
@@ -205,6 +211,7 @@ export default function Hero() {
 
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
             <a
+              data-magnetic
               href={waLink("Hello! I'd like to book a transfer with EasyTransfer Georgia.")}
               target="_blank"
               rel="noopener noreferrer"
@@ -213,6 +220,7 @@ export default function Hero() {
               {t.hero.cta}
             </a>
             <a
+              data-magnetic
               href="#services"
               className="inline-flex items-center gap-2 rounded-full border border-cream/30 px-6 py-3 text-sm font-semibold text-cream transition-colors hover:border-gold hover:text-gold"
             >

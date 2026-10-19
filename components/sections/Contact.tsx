@@ -81,10 +81,13 @@ export default function Contact() {
             </h2>
             <p className="mt-3 max-w-md text-[15px] leading-relaxed text-cream/70">{t.contact.subtitle}</p>
 
-            <div className="mt-8 flex flex-col gap-4">
+            <div className="mt-8 flex flex-col gap-2">
               {infoRows.map((row) => (
-                <div key={row.label} className="flex items-center gap-4">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
+                <div
+                  key={row.label}
+                  className="spot group -mx-3 flex items-center gap-4 rounded-2xl border border-transparent px-3 py-2.5 transition-colors duration-300 hover:border-cream/10 hover:bg-cream/[0.03]"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold transition-[background-color,color,scale] duration-300 group-hover:scale-110 group-hover:bg-gold group-hover:text-ink">
                     <row.Icon className="h-5 w-5" />
                   </span>
                   <div>
@@ -97,6 +100,7 @@ export default function Contact() {
 
             <div className="mt-8 flex flex-wrap gap-3">
               <a
+                data-magnetic
                 href={waLink("Hello! I'd like to book a transfer with EasyTransfer Georgia.")}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -105,12 +109,14 @@ export default function Contact() {
                 WhatsApp
               </a>
               <a
+                data-magnetic
                 href={`tel:${BUSINESS.phoneTel}`}
                 className="inline-flex items-center gap-2 rounded-full border border-cream/25 px-5 py-2.5 text-[13px] font-semibold text-cream transition-colors hover:border-gold hover:text-gold"
               >
                 {t.contact.callCta}
               </a>
               <a
+                data-magnetic
                 href={directionsLink}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -138,7 +144,7 @@ export default function Contact() {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5, delay: 0.08 }}
             onSubmit={onSubmit}
-            className="h-fit rounded-2xl bg-cream p-6 text-ink sm:p-7"
+            className="spot h-fit rounded-2xl bg-cream p-6 text-ink sm:p-7"
           >
             <h3 className="font-display text-xl font-bold">{t.contact.title}</h3>
             <p className="mt-1.5 text-[13.5px] leading-relaxed text-ink/60">{t.contact.subtitle}</p>
@@ -152,7 +158,7 @@ export default function Contact() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full min-w-0 rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-[14px] text-ink outline-none focus:border-gold"
+                  className="w-full min-w-0 rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-[14px] text-ink outline-none transition-[border-color,box-shadow] duration-200 hover:border-ink/30 focus:border-gold focus:ring-4 focus:ring-gold/15"
                 />
               </label>
             </div>
@@ -165,7 +171,7 @@ export default function Contact() {
                 <select
                   value={route}
                   onChange={(e) => setRoute(e.target.value)}
-                  className="w-full min-w-0 rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-[14px] text-ink outline-none focus:border-gold"
+                  className="w-full min-w-0 rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-[14px] text-ink outline-none transition-[border-color,box-shadow] duration-200 hover:border-ink/30 focus:border-gold focus:ring-4 focus:ring-gold/15"
                 >
                   <option value="">{t.contact.form.selectPlaceholder}</option>
                   {ROUTES.map((r) => (
@@ -186,12 +192,13 @@ export default function Contact() {
                   type="datetime-local"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full min-w-0 rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-[14px] text-ink outline-none focus:border-gold"
+                  className="w-full min-w-0 rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-[14px] text-ink outline-none transition-[border-color,box-shadow] duration-200 hover:border-ink/30 focus:border-gold focus:ring-4 focus:ring-gold/15"
                 />
               </label>
             </div>
 
             <button
+              data-magnetic
               type="submit"
               className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-whatsapp px-6 py-3.5 text-[14px] font-semibold text-white transition-transform hover:scale-[1.01]"
             >

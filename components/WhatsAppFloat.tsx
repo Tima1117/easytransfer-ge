@@ -9,6 +9,7 @@ export default function WhatsAppFloat() {
 
   return (
     <motion.a
+      data-magnetic
       href={waLink("Hello! I'd like to book a transfer with EasyTransfer Georgia.")}
       target="_blank"
       rel="noopener noreferrer"

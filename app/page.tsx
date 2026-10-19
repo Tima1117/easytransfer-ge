@@ -3,6 +3,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+import CursorFX from "@/components/fx/CursorFX";
 import Hero from "@/components/sections/Hero";
 import Services from "@/components/sections/Services";
 import About from "@/components/sections/About";
@@ -25,6 +26,7 @@ export default function Home() {
       </main>
       <Footer />
       <WhatsAppFloat />
+      <CursorFX />
     </LanguageProvider>
   );
 }
