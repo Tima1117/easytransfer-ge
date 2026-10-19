@@ -48,22 +48,30 @@ export default function Hero() {
   });
   const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: 0.4 });
 
-  const width = useTransform(progress, [0, 0.62], ["46vw", "100vw"]);
-  const height = useTransform(progress, [0, 0.62], ["56vh", "100vh"]);
-  const radius = useTransform(progress, [0, 0.62], [28, 0]);
-  const frameOpacityOverlay = useTransform(progress, [0, 0.45, 0.65], [0.55, 0.3, 0.72]);
-  const wordSpread = useTransform(progress, [0, 0.5], [0, 1]);
-  const prefixX = useTransform(wordSpread, [0, 1], [0, -90]);
-  const introFade = useTransform(progress, [0, 0.18], [1, 0]);
-  const contentOpacity = useTransform(progress, [0.62, 0.82], [0, 1]);
-  const contentY = useTransform(progress, [0.62, 0.85], [26, 0]);
+  // Frame grows on one axis only (vw, so it interpolates cleanly); a fixed
+  // aspect-ratio keeps it a landscape rectangle at any viewport shape, and
+  // the final width is wildly oversized so it always covers 100% of the
+  // viewport height too — the sticky stage's overflow-hidden clips the rest.
+  const frameWidth = useTransform(progress, [0, 0.6], ["46vw", "430vw"]);
+  const radius = useTransform(progress, [0, 0.6], [28, 0]);
+  const overlayOpacity = useTransform(progress, [0, 0.35, 0.6], [0.35, 0.5, 0.78]);
+
+  const spread = useTransform(progress, [0, 0.42], [0, 1]);
+  const leftX = useTransform(spread, [0, 1], [0, -34]);
+  const rightX = useTransform(spread, [0, 1], [0, 34]);
+  const wordmarkOpacity = useTransform(progress, [0, 0.38, 0.56], [1, 1, 0]);
+
+  const contentOpacity = useTransform(progress, [0.52, 0.72], [0, 1]);
+  const contentY = useTransform(progress, [0.52, 0.78], [26, 0]);
   const hintOpacity = useTransform(progress, [0, 0.08], [1, 0]);
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const tiltX = useTransform(my, [-0.5, 0.5], [3, -3]);
-  const tiltY = useTransform(mx, [-0.5, 0.5], [-4, 4]);
-  const tiltFade = useTransform(progress, [0, 0.45], [1, 0]);
+  const tiltFade = useTransform(progress, [0, 0.4], [1, 0]);
+  const tiltXRaw = useTransform(my, [-0.5, 0.5], [3, -3]);
+  const tiltYRaw = useTransform(mx, [-0.5, 0.5], [-4, 4]);
+  const tiltX = useTransform([tiltXRaw, tiltFade], (v) => (v[0] as number) * (v[1] as number));
+  const tiltY = useTransform([tiltYRaw, tiltFade], (v) => (v[0] as number) * (v[1] as number));
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (reduced) return;
@@ -80,38 +88,56 @@ export default function Hero() {
       style={{ height: reduced ? "100svh" : "230vh" }}
     >
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
-        {/* spread-out word halves behind the frame */}
+        {/* split brand wordmark, like ARGO / RENT */}
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
-          style={{ opacity: reduced ? 1 : introFade }}
+          className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center gap-[6vw] px-6"
+          style={{ opacity: reduced ? 1 : wordmarkOpacity }}
         >
-          <div className="font-display flex select-none flex-wrap items-center justify-center gap-x-4 px-6 text-center text-[11vw] font-extrabold uppercase leading-[0.92] text-cream/90 sm:text-[9vw]">
-            <motion.span style={reduced ? undefined : { x: prefixX }}>
-              {t.hero.headlinePrefix}
-            </motion.span>
-            <span className="relative inline-block min-w-[2ch] text-gold">
-              <span key={wordIx} className={`inline-block transition-all duration-300 ${wordOut ? "opacity-0 blur-md" : "opacity-100 blur-0"}`}>
-                {t.hero.words[wordIx]}
-              </span>
+          <motion.span
+            style={reduced ? undefined : { x: leftX }}
+            className="font-display select-none text-[10vw] font-extrabold uppercase leading-[0.9] text-cream/90 sm:text-[9vw]"
+          >
+            Easy
+          </motion.span>
+          <motion.span
+            style={reduced ? undefined : { x: rightX }}
+            className="font-display select-none text-[10vw] font-extrabold uppercase leading-[0.9] text-gold sm:text-[9vw]"
+          >
+            Transfer
+          </motion.span>
+        </motion.div>
+
+        {/* cycling destination badge, floating above the frame */}
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-[18%] z-[2] flex justify-center"
+          style={{ opacity: reduced ? 0 : wordmarkOpacity }}
+        >
+          <span className="rounded-full border border-gold/40 bg-ink/50 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-gold backdrop-blur-sm">
+            {t.hero.headlinePrefix} {" "}
+            <span key={wordIx} className={`inline-block transition-all duration-300 ${wordOut ? "opacity-0 blur-sm" : "opacity-100 blur-0"}`}>
+              {t.hero.words[wordIx]}
             </span>
-          </div>
+          </span>
         </motion.div>
 
         {/* expanding video frame */}
         <div className="absolute inset-0 z-[1] flex items-center justify-center" onMouseMove={onMove}>
           <motion.div
-            className="relative overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,0.45)]"
+            className="relative shadow-[0_40px_120px_rgba(0,0,0,0.45)]"
             style={
               reduced
-                ? { width: "100vw", height: "100svh", borderRadius: 0 }
+                ? { width: "100vw", height: "100svh", borderRadius: 0, overflow: "hidden" }
                 : {
-                    width,
-                    height,
+                    width: frameWidth,
+                    aspectRatio: "16 / 10",
+                    maxWidth: "none",
+                    maxHeight: "none",
                     borderRadius: radius,
                     rotateX: tiltX,
                     rotateY: tiltY,
-                    opacity: tiltFade,
+                    overflow: "hidden",
                   }
             }
           >
@@ -125,8 +151,8 @@ export default function Hero() {
               playsInline
             />
             <motion.div
-              className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-ink/40"
-              style={{ opacity: frameOpacityOverlay }}
+              className="absolute inset-0 bg-gradient-to-t from-ink via-ink/15 to-ink/35"
+              style={{ opacity: overlayOpacity }}
             />
           </motion.div>
         </div>

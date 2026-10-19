@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { motion, useInView, animate } from "framer-motion";
 import { useLanguage } from "@/lib/language-context";
 
@@ -113,13 +114,22 @@ export default function About() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-60px" }}
                   transition={{ duration: 0.45, delay: i * 0.08 }}
-                  className="flex items-center justify-between rounded-xl border border-cream/12 bg-cream/[0.04] px-5 py-4"
+                  className="group relative flex items-center gap-4 overflow-hidden rounded-xl border border-cream/12 bg-cream/[0.04] p-3"
                 >
-                  <div>
-                    <p className="font-display text-base font-bold text-cream">{f.name}</p>
+                  <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-lg">
+                    <Image
+                      src={f.photo}
+                      alt={f.name}
+                      fill
+                      sizes="112px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-display truncate text-base font-bold text-cream">{f.name}</p>
                     <p className="mt-0.5 text-[12px] uppercase tracking-wide text-gold/80">{f.cls}</p>
                   </div>
-                  <div className="text-right text-[12px] text-cream/60">
+                  <div className="shrink-0 text-right text-[11.5px] leading-snug text-cream/60">
                     <p>{f.seats}</p>
                     <p>{f.bags}</p>
                   </div>

@@ -6,8 +6,7 @@ export const LANGS: { code: Lang; label: string }[] = [
   { code: "ka", label: "ქა" },
 ];
 
-type ServiceItem = { title: string; desc: string; tag: string };
-type FleetItem = { name: string; cls: string; seats: string; bags: string };
+type FleetItem = { name: string; cls: string; seats: string; bags: string; photo: string };
 type StatItem = { value: string; label: string };
 
 export type Dictionary = {
@@ -34,7 +33,12 @@ export type Dictionary = {
     eyebrow: string;
     title: string;
     subtitle: string;
-    items: ServiceItem[];
+    tabs: { all: string; transfer: string; excursion: string };
+    priceFrom: string;
+    bookCta: string;
+    detailsCta: string;
+    hideCta: string;
+    includes: string;
   };
   about: {
     eyebrow: string;
@@ -78,6 +82,7 @@ export type Dictionary = {
       commentPlaceholder: string;
       submit: string;
       selectPlaceholder: string;
+      service: string;
       passengers: string;
     };
     note: string;
@@ -155,31 +160,15 @@ export const dictionaries: Record<Lang, Dictionary> = {
     },
     services: {
       eyebrow: "Services",
-      title: "One call covers the whole trip",
+      title: "Pick a ride or a route",
       subtitle:
-        "From the moment you land to the moment you reach the door — we handle it.",
-      items: [
-        {
-          title: "Airport pickup",
-          desc: "Batumi, Tbilisi and Kutaisi airports. We track your flight, so a delay never leaves you waiting outside.",
-          tag: "Meet & greet",
-        },
-        {
-          title: "City-to-city transfer",
-          desc: "Door-to-door between any two cities in Georgia, on your schedule, for one fixed price with no surprises.",
-          tag: "Fixed price",
-        },
-        {
-          title: "VIP chauffeur",
-          desc: "A discreet, professional driver for business trips and VIP guests — on call around the clock.",
-          tag: "24/7 on call",
-        },
-        {
-          title: "Excursions with a driver-guide",
-          desc: "One-day and multi-day tours across Adjara, Svaneti, Kakheti and beyond, with a local behind the wheel.",
-          tag: "Driver-guide",
-        },
-      ],
+        "From a 20-minute airport run to a 3-day trip into the mountains — one driver, one price, booked in WhatsApp.",
+      tabs: { all: "All", transfer: "Transfers", excursion: "Excursions" },
+      priceFrom: "from",
+      bookCta: "Book in WhatsApp",
+      detailsCta: "Route details",
+      hideCta: "Hide",
+      includes: "What's included",
     },
     about: {
       eyebrow: "About us",
@@ -195,9 +184,9 @@ export const dictionaries: Record<Lang, Dictionary> = {
       languages: ["Georgian", "Russian", "English"],
       fleetLabel: "The fleet",
       fleet: [
-        { name: "Lexus RX", cls: "Premium", seats: "1–4 passengers", bags: "3 bags" },
-        { name: "Mercedes-Benz V-Class", cls: "VIP minivan", seats: "1–7 passengers", bags: "7 bags" },
-        { name: "Mercedes-Benz Sprinter", cls: "Group", seats: "1–17 passengers", bags: "16 bags" },
+        { name: "Lexus RX", cls: "Premium", seats: "1–4 passengers", bags: "3 bags", photo: "/images/fleet/lexus-rx.jpg" },
+        { name: "Mercedes-Benz V-Class", cls: "VIP minivan", seats: "1–7 passengers", bags: "7 bags", photo: "/images/fleet/mercedes-v-class.jpg" },
+        { name: "Mercedes-Benz Sprinter", cls: "Group", seats: "1–17 passengers", bags: "16 bags", photo: "/images/fleet/mercedes-sprinter.jpg" },
       ],
       routesLabel: "Popular routes",
       routes: [
@@ -238,7 +227,8 @@ export const dictionaries: Record<Lang, Dictionary> = {
         comment: "Comment (optional)",
         commentPlaceholder: "Flight number, number of passengers, child seat…",
         submit: "Send to WhatsApp",
-        selectPlaceholder: "Choose a city",
+        selectPlaceholder: "Any route — I'll advise",
+        service: "Service / route",
         passengers: "Passengers",
       },
       note: "No prepayment — the booking is confirmed once we reply on WhatsApp.",
@@ -277,31 +267,15 @@ export const dictionaries: Record<Lang, Dictionary> = {
     },
     services: {
       eyebrow: "Услуги",
-      title: "Один звонок закрывает всю поездку",
+      title: "Выберите поездку или маршрут",
       subtitle:
-        "С момента посадки самолёта до двери отеля — обо всём позаботимся мы.",
-      items: [
-        {
-          title: "Трансфер из аэропорта",
-          desc: "Аэропорты Батуми, Тбилиси и Кутаиси. Следим за рейсом — задержка не оставит вас ждать снаружи.",
-          tag: "Встреча с табличкой",
-        },
-        {
-          title: "Трансфер между городами",
-          desc: "Из точки в точку по всей Грузии, в удобное вам время, по одной фиксированной цене без сюрпризов.",
-          tag: "Фиксированная цена",
-        },
-        {
-          title: "VIP-шофёр",
-          desc: "Сдержанный профессиональный водитель для деловых поездок и VIP-гостей — на связи круглосуточно.",
-          tag: "24/7 на связи",
-        },
-        {
-          title: "Экскурсии с водителем-гидом",
-          desc: "Одно- и многодневные туры по Аджарии, Сванети, Кахетии и другим регионам с местным гидом за рулём.",
-          tag: "Водитель-гид",
-        },
-      ],
+        "От 20-минутного трансфера из аэропорта до 3-дневного тура в горы — один водитель, одна цена, бронь в WhatsApp.",
+      tabs: { all: "Все", transfer: "Трансферы", excursion: "Экскурсии" },
+      priceFrom: "от",
+      bookCta: "Забронировать в WhatsApp",
+      detailsCta: "Подробности маршрута",
+      hideCta: "Скрыть",
+      includes: "Что входит",
     },
     about: {
       eyebrow: "О нас",
@@ -317,9 +291,9 @@ export const dictionaries: Record<Lang, Dictionary> = {
       languages: ["Грузинский", "Русский", "Английский"],
       fleetLabel: "Автопарк",
       fleet: [
-        { name: "Lexus RX", cls: "Премиум", seats: "1–4 пассажира", bags: "3 чемодана" },
-        { name: "Mercedes-Benz V-Class", cls: "VIP-минивэн", seats: "1–7 пассажиров", bags: "7 чемоданов" },
-        { name: "Mercedes-Benz Sprinter", cls: "Групповой", seats: "1–17 пассажиров", bags: "16 чемоданов" },
+        { name: "Lexus RX", cls: "Премиум", seats: "1–4 пассажира", bags: "3 чемодана", photo: "/images/fleet/lexus-rx.jpg" },
+        { name: "Mercedes-Benz V-Class", cls: "VIP-минивэн", seats: "1–7 пассажиров", bags: "7 чемоданов", photo: "/images/fleet/mercedes-v-class.jpg" },
+        { name: "Mercedes-Benz Sprinter", cls: "Групповой", seats: "1–17 пассажиров", bags: "16 чемоданов", photo: "/images/fleet/mercedes-sprinter.jpg" },
       ],
       routesLabel: "Популярные маршруты",
       routes: [
@@ -359,7 +333,8 @@ export const dictionaries: Record<Lang, Dictionary> = {
         comment: "Комментарий (необязательно)",
         commentPlaceholder: "Номер рейса, число пассажиров, детское кресло…",
         submit: "Отправить в WhatsApp",
-        selectPlaceholder: "Выберите город",
+        selectPlaceholder: "Любой маршрут — подскажем сами",
+        service: "Услуга / маршрут",
         passengers: "Пассажиров",
       },
       note: "Без предоплаты — бронь подтверждается ответом в WhatsApp.",
@@ -398,30 +373,15 @@ export const dictionaries: Record<Lang, Dictionary> = {
     },
     services: {
       eyebrow: "სერვისები",
-      title: "ერთი ზარი ფარავს მთელ მოგზაურობას",
-      subtitle: "თვითმფრინავიდან ჩამოსვლიდან სასტუმროს კარამდე — ყველაფერზე ჩვენ ვზრუნავთ.",
-      items: [
-        {
-          title: "აეროპორტში დახვედრა",
-          desc: "ბათუმის, თბილისისა და ქუთაისის აეროპორტები. ფრენას ვადევნებთ თვალს — დაგვიანება გარეთ არ დაგტოვებთ.",
-          tag: "დახვედრა ტაბლოთი",
-        },
-        {
-          title: "ქალაქთაშორისი ტრანსფერი",
-          desc: "ნებისმიერ ორ წერტილს შორის საქართველოში, თქვენთვის მოსახერხებელ დროს, ფიქსირებული ფასით.",
-          tag: "ფიქსირებული ფასი",
-        },
-        {
-          title: "VIP შოფერი",
-          desc: "დისკრეტული, პროფესიონალი მძღოლი ბიზნეს მოგზაურობისა და VIP სტუმრებისთვის — 24 საათზე ხელმისაწვდომი.",
-          tag: "24/7 კავშირზე",
-        },
-        {
-          title: "ექსკურსია მძღოლ-გიდთან",
-          desc: "ერთდღიანი და მრავალდღიანი ტურები აჭარაში, სვანეთში, კახეთსა და სხვა რეგიონებში ადგილობრივ მძღოლ-გიდთან ერთად.",
-          tag: "მძღოლ-გიდი",
-        },
-      ],
+      title: "აირჩიეთ მგზავრობა ან მარშრუტი",
+      subtitle:
+        "20-წუთიანი ტრანსფერიდან აეროპორტიდან 3-დღიან მთის ტურამდე — ერთი მძღოლი, ერთი ფასი, ჯავშანი WhatsApp-ში.",
+      tabs: { all: "ყველა", transfer: "ტრანსფერები", excursion: "ექსკურსიები" },
+      priceFrom: "დან",
+      bookCta: "დაჯავშნა WhatsApp-ში",
+      detailsCta: "მარშრუტის დეტალები",
+      hideCta: "დამალვა",
+      includes: "რა შედის",
     },
     about: {
       eyebrow: "ჩვენ შესახებ",
@@ -437,9 +397,9 @@ export const dictionaries: Record<Lang, Dictionary> = {
       languages: ["ქართული", "რუსული", "ინგლისური"],
       fleetLabel: "ავტოპარკი",
       fleet: [
-        { name: "Lexus RX", cls: "პრემიუმი", seats: "1–4 მგზავრი", bags: "3 ჩემოდანი" },
-        { name: "Mercedes-Benz V-Class", cls: "VIP მინივენი", seats: "1–7 მგზავრი", bags: "7 ჩემოდანი" },
-        { name: "Mercedes-Benz Sprinter", cls: "ჯგუფური", seats: "1–17 მგზავრი", bags: "16 ჩემოდანი" },
+        { name: "Lexus RX", cls: "პრემიუმი", seats: "1–4 მგზავრი", bags: "3 ჩემოდანი", photo: "/images/fleet/lexus-rx.jpg" },
+        { name: "Mercedes-Benz V-Class", cls: "VIP მინივენი", seats: "1–7 მგზავრი", bags: "7 ჩემოდანი", photo: "/images/fleet/mercedes-v-class.jpg" },
+        { name: "Mercedes-Benz Sprinter", cls: "ჯგუფური", seats: "1–17 მგზავრი", bags: "16 ჩემოდანი", photo: "/images/fleet/mercedes-sprinter.jpg" },
       ],
       routesLabel: "პოპულარული მარშრუტები",
       routes: [
@@ -479,7 +439,8 @@ export const dictionaries: Record<Lang, Dictionary> = {
         comment: "კომენტარი (არასავალდებულო)",
         commentPlaceholder: "ფრენის ნომერი, მგზავრთა რაოდენობა, საბავშვო სავარძელი…",
         submit: "გაგზავნა WhatsApp-ში",
-        selectPlaceholder: "აირჩიეთ ქალაქი",
+        selectPlaceholder: "ნებისმიერი მარშრუტი — ვურჩევთ",
+        service: "სერვისი / მარშრუტი",
         passengers: "მგზავრი",
       },
       note: "წინასწარი გადახდის გარეშე — ჯავშანი დასტურდება WhatsApp-ში პასუხით.",
