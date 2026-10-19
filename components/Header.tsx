@@ -35,13 +35,20 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled ? "bg-ink/90 backdrop-blur-md shadow-[0_1px_0_rgba(202,164,85,0.25)]" : "bg-transparent"
+      className={`fixed inset-x-0 top-0 z-50 border-b border-cream/10 transition-colors duration-300 ${
+        scrolled ? "bg-ink/90 backdrop-blur-md" : "bg-ink/40 backdrop-blur-sm"
       }`}
     >
-      <div className="container-px flex h-[72px] items-center justify-between">
-        <a href="#top" className="font-display text-lg font-extrabold tracking-tight text-cream">
-          Easy<span className="text-gold">Transfer</span>
+      <div className="container-px mx-auto flex h-[68px] max-w-6xl items-center justify-between">
+        <a href="#top" className="font-display flex items-center gap-2 text-lg font-extrabold tracking-tight text-cream">
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-gold text-ink">
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
+              <path d="M9 21 11 3M15 21 13 3" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+            </svg>
+          </span>
+          <span>
+            Easy<span className="text-gold">Transfer</span>
+          </span>
         </a>
 
         <nav className="hidden items-center gap-7 lg:flex">
@@ -49,7 +56,7 @@ export default function Header() {
             <a
               key={s.id}
               href={`#${s.id}`}
-              className="text-[13px] font-medium uppercase tracking-[0.08em] text-cream/75 transition-colors hover:text-gold"
+              className="text-[12px] font-bold uppercase tracking-[0.1em] text-cream/70 transition-colors hover:text-gold"
             >
               {t.nav[s.key]}
             </a>
