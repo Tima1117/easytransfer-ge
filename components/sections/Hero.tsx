@@ -53,17 +53,17 @@ export default function Hero() {
   // grows gently while the wordmark is still readable, then bursts past
   // 100vw so it always covers 100% of the viewport height too — the sticky
   // stage's overflow-hidden clips the rest.
-  const frameVw = useTransform(progress, [0, 0.5, 0.62], [46, 100, 260]);
+  const frameVw = useTransform(progress, [0, 0.5, 0.62], [42, 100, 260]);
   const frameWidth = useTransform(frameVw, (v) => `${v}vw`);
   const radius = useTransform(progress, [0, 0.6], [28, 0]);
   const overlayOpacity = useTransform(progress, [0, 0.35, 0.6], [0.35, 0.5, 0.78]);
 
-  // The words are pinned to the frame's edges from the very first frame (so
-  // the brand name reads immediately, not just after scrolling starts) and
-  // slide out in lockstep with the frame's own growth — one driving value,
-  // so the two can never feel out of sync.
-  const leftX = useTransform(frameVw, (v) => `${-(v / 2 + 4)}vw`);
-  const rightX = useTransform(frameVw, (v) => `${v / 2 + 4}vw`);
+  // The words sit in their own fixed flex slots either side of the frame
+  // (a gap sized to the frame's resting width) so they read in full the
+  // instant the page loads — only a small extra drift is scroll-linked,
+  // just enough to feel alive without ever pushing them off-screen.
+  const leftX = useTransform(progress, [0, 0.5], ["0vw", "-3vw"]);
+  const rightX = useTransform(progress, [0, 0.5], ["0vw", "3vw"]);
   const wordmarkOpacity = useTransform(progress, [0, 0.38, 0.56], [1, 1, 0]);
 
   const contentOpacity = useTransform(progress, [0.52, 0.72], [0, 1]);
@@ -93,21 +93,22 @@ export default function Hero() {
       style={{ height: reduced ? "100svh" : "230vh" }}
     >
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
-        {/* split brand wordmark, like ARGO / RENT */}
+        {/* split brand wordmark, like ARGO / RENT — hidden on narrow screens,
+            where there just isn't room beside the frame for it to read. */}
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center gap-[6vw] px-6"
+          className="pointer-events-none absolute inset-0 z-0 hidden items-center justify-center gap-[54vw] sm:flex"
           style={{ opacity: reduced ? 1 : wordmarkOpacity }}
         >
           <motion.span
             style={reduced ? undefined : { x: leftX }}
-            className="font-display select-none text-[10vw] font-extrabold uppercase leading-[0.9] text-cream/90 sm:text-[9vw]"
+            className="font-display select-none text-[clamp(30px,5vw,80px)] font-extrabold uppercase leading-[0.9] text-cream/90"
           >
             Easy
           </motion.span>
           <motion.span
             style={reduced ? undefined : { x: rightX }}
-            className="font-display select-none text-[10vw] font-extrabold uppercase leading-[0.9] text-gold sm:text-[9vw]"
+            className="font-display select-none text-[clamp(30px,5vw,80px)] font-extrabold uppercase leading-[0.9] text-gold"
           >
             Transfer
           </motion.span>
