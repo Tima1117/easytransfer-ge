@@ -49,10 +49,7 @@ export default function Reviews() {
       <div className="container-px mx-auto max-w-6xl">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-xl">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.25em] text-gold">
-              {t.reviews.eyebrow}
-            </p>
-            <h2 className="font-display mt-3 text-[clamp(26px,3.6vw,40px)] font-extrabold leading-[1.1] text-ink">
+            <h2 className="font-display text-[clamp(26px,3.6vw,40px)] font-extrabold leading-[1.1] text-ink">
               {t.reviews.title}
             </h2>
             <p className="mt-3 text-[15px] leading-relaxed text-ink/65">{t.reviews.subtitle}</p>

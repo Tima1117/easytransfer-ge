@@ -76,10 +76,7 @@ export default function Contact() {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-[12px] font-semibold uppercase tracking-[0.25em] text-gold">
-              {t.contact.eyebrow}
-            </p>
-            <h2 className="font-display mt-3 text-[clamp(26px,3.6vw,40px)] font-extrabold leading-[1.1]">
+            <h2 className="font-display text-[clamp(26px,3.6vw,40px)] font-extrabold leading-[1.1]">
               {t.contact.title}
             </h2>
             <p className="mt-3 max-w-md text-[15px] leading-relaxed text-cream/70">{t.contact.subtitle}</p>

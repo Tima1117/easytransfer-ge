@@ -48,15 +48,12 @@ export default function About() {
     <section id="about" className="section-pad bg-ink text-cream">
       <div className="container-px mx-auto max-w-6xl">
         <div className="max-w-2xl">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.25em] text-gold">
-            {t.about.eyebrow}
-          </p>
           <motion.h2
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5 }}
-            className="font-display mt-3 text-[clamp(26px,3.6vw,40px)] font-extrabold leading-[1.12]"
+            className="font-display text-[clamp(26px,3.6vw,40px)] font-extrabold leading-[1.12]"
           >
             {t.about.title}
           </motion.h2>

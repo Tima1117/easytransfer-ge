@@ -15,10 +15,7 @@ export default function Gallery() {
       <div className="container-px mx-auto max-w-6xl">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="text-[12px] font-semibold uppercase tracking-[0.25em] text-gold">
-              {t.gallery.eyebrow}
-            </p>
-            <h2 className="font-display mt-3 text-[clamp(26px,3.6vw,40px)] font-extrabold leading-[1.1] text-ink">
+            <h2 className="font-display text-[clamp(26px,3.6vw,40px)] font-extrabold leading-[1.1] text-ink">
               {t.gallery.title}
             </h2>
           </div>

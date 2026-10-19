@@ -50,29 +50,28 @@ export default function Hero() {
 
   // Frame grows on one axis only (vw, so it interpolates cleanly); a fixed
   // aspect-ratio keeps it a landscape rectangle at any viewport shape. It
-  // grows gently while the wordmark is still readable, then bursts past
-  // 100vw so it always covers 100% of the viewport height too — the sticky
-  // stage's overflow-hidden clips the rest.
-  const frameVw = useTransform(progress, [0, 0.5, 0.62], [42, 100, 260]);
+  // starts narrow — just the stage for the road — so the wordmark reads at
+  // full size either side of it, then bursts past 100vw so it always covers
+  // 100% of the viewport height too; the sticky stage's overflow-hidden
+  // clips the rest.
+  const frameVw = useTransform(progress, [0, 0.45, 0.6], [32, 90, 260]);
   const frameWidth = useTransform(frameVw, (v) => `${v}vw`);
-  const radius = useTransform(progress, [0, 0.6], [28, 0]);
-  const overlayOpacity = useTransform(progress, [0, 0.35, 0.6], [0.35, 0.5, 0.78]);
+  const radius = useTransform(progress, [0, 0.6], [22, 0]);
+  const overlayOpacity = useTransform(progress, [0, 0.35, 0.6], [0.3, 0.45, 0.78]);
 
-  // The words sit in their own fixed flex slots either side of the frame
-  // (a gap sized to the frame's resting width) so they read in full the
-  // instant the page loads — only a small extra drift is scroll-linked,
-  // just enough to feel alive without ever pushing them off-screen.
-  const leftX = useTransform(progress, [0, 0.5], ["0vw", "-3vw"]);
-  const rightX = useTransform(progress, [0, 0.5], ["0vw", "3vw"]);
-  const wordmarkOpacity = useTransform(progress, [0, 0.38, 0.56], [1, 1, 0]);
+  // A small drift, just enough to feel alive — the wordmark's own size does
+  // the work, not a dramatic journey across the screen.
+  const leftX = useTransform(progress, [0, 0.45], ["0vw", "-2.5vw"]);
+  const rightX = useTransform(progress, [0, 0.45], ["0vw", "2.5vw"]);
+  const wordmarkOpacity = useTransform(progress, [0, 0.3, 0.48], [1, 1, 0]);
 
-  const contentOpacity = useTransform(progress, [0.52, 0.72], [0, 1]);
-  const contentY = useTransform(progress, [0.52, 0.78], [26, 0]);
+  const contentOpacity = useTransform(progress, [0.5, 0.7], [0, 1]);
+  const contentY = useTransform(progress, [0.5, 0.76], [22, 0]);
   const hintOpacity = useTransform(progress, [0, 0.08], [1, 0]);
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const tiltFade = useTransform(progress, [0, 0.4], [1, 0]);
+  const tiltFade = useTransform(progress, [0, 0.35], [1, 0]);
   const tiltXRaw = useTransform(my, [-0.5, 0.5], [3, -3]);
   const tiltYRaw = useTransform(mx, [-0.5, 0.5], [-4, 4]);
   const tiltX = useTransform([tiltXRaw, tiltFade], (v) => (v[0] as number) * (v[1] as number));
@@ -93,40 +92,42 @@ export default function Hero() {
       style={{ height: reduced ? "100svh" : "230vh" }}
     >
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
-        {/* split brand wordmark, like ARGO / RENT — hidden on narrow screens,
-            where there just isn't room beside the frame for it to read. */}
+        {/* split brand wordmark, full size, either side of the frame — fades
+            as the frame grows over it. Hidden on narrow screens, where
+            there's no room for it to read at this size. */}
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute inset-0 z-0 hidden items-center justify-center gap-[54vw] sm:flex"
+          className="pointer-events-none absolute inset-0 z-0 hidden items-center justify-between px-[3vw] sm:flex"
           style={{ opacity: reduced ? 1 : wordmarkOpacity }}
         >
           <motion.span
             style={reduced ? undefined : { x: leftX }}
-            className="font-display select-none text-[clamp(30px,5vw,80px)] font-extrabold uppercase leading-[0.9] text-cream/90"
+            className="font-display select-none text-[clamp(44px,8vw,150px)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em] text-cream/90"
           >
             Easy
           </motion.span>
           <motion.span
             style={reduced ? undefined : { x: rightX }}
-            className="font-display select-none text-[clamp(30px,5vw,80px)] font-extrabold uppercase leading-[0.9] text-gold"
+            className="font-display select-none text-[clamp(36px,6.6vw,124px)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em] text-gold"
           >
             Transfer
           </motion.span>
         </motion.div>
 
-        {/* cycling destination badge, floating above the frame */}
-        <motion.div
+        {/* cycling destination line */}
+        <motion.p
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-[18%] z-[2] flex justify-center"
+          className="pointer-events-none absolute inset-x-0 top-[14%] z-[2] text-center text-[15px] text-cream/70 sm:text-base"
           style={{ opacity: reduced ? 0 : wordmarkOpacity }}
         >
-          <span className="rounded-full border border-gold/40 bg-ink/50 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-gold backdrop-blur-sm">
-            {t.hero.headlinePrefix} {" "}
-            <span key={wordIx} className={`inline-block transition-all duration-300 ${wordOut ? "opacity-0 blur-sm" : "opacity-100 blur-0"}`}>
-              {t.hero.words[wordIx]}
-            </span>
+          {t.hero.headlinePrefix}{" "}
+          <span
+            key={wordIx}
+            className={`font-display font-bold text-gold transition-all duration-300 ${wordOut ? "opacity-0 blur-sm" : "opacity-100 blur-0"}`}
+          >
+            {t.hero.words[wordIx]}
           </span>
-        </motion.div>
+        </motion.p>
 
         {/* expanding video frame */}
         <div className="absolute inset-0 z-[1] flex items-center justify-center" onMouseMove={onMove}>
@@ -169,17 +170,14 @@ export default function Hero() {
 
         {/* content revealed once the frame fills the screen */}
         <motion.div
-          className="absolute inset-x-0 bottom-0 z-[2] flex flex-col items-center gap-6 px-6 pb-16 text-center sm:pb-20"
+          className="absolute inset-x-0 bottom-0 z-[2] flex flex-col items-center gap-5 px-6 pb-16 text-center sm:pb-20"
           style={reduced ? undefined : { opacity: contentOpacity, y: contentY }}
         >
-          <p className="text-[12px] font-semibold uppercase tracking-[0.25em] text-gold">
-            {t.hero.eyebrow}
-          </p>
           <h1 className="font-display max-w-3xl text-balance text-[clamp(26px,4.4vw,46px)] font-extrabold leading-[1.1] text-cream">
             {t.hero.headlineSuffix}
           </h1>
           <p className="max-w-xl text-balance text-[15px] leading-relaxed text-cream/75 sm:text-base">
-            {t.hero.hook}
+            {t.hero.hook} {t.hero.stats.rating}, {t.hero.stats.hours.toLowerCase()}.
           </p>
 
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
@@ -198,14 +196,6 @@ export default function Hero() {
               {t.hero.ctaSecondary}
             </a>
           </div>
-
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[12px] font-medium uppercase tracking-[0.1em] text-cream/55">
-            <span>{t.hero.stats.rating}</span>
-            <span className="h-1 w-1 rounded-full bg-gold/70" />
-            <span>{t.hero.stats.hours}</span>
-            <span className="h-1 w-1 rounded-full bg-gold/70" />
-            <span>{t.hero.stats.fleet}</span>
-          </div>
         </motion.div>
 
         {!reduced && (
@@ -213,9 +203,6 @@ export default function Hero() {
             className="absolute inset-x-0 bottom-6 z-[2] flex flex-col items-center gap-2 text-cream/50"
             style={{ opacity: hintOpacity }}
           >
-            <span className="text-[10px] font-semibold uppercase tracking-[0.3em]">
-              {t.hero.scrollHint}
-            </span>
             <span className="h-8 w-[1px] bg-gradient-to-b from-cream/60 to-transparent" />
           </motion.div>
         )}
