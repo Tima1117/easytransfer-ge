@@ -49,16 +49,21 @@ export default function Hero() {
   const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: 0.4 });
 
   // Frame grows on one axis only (vw, so it interpolates cleanly); a fixed
-  // aspect-ratio keeps it a landscape rectangle at any viewport shape, and
-  // the final width is wildly oversized so it always covers 100% of the
-  // viewport height too — the sticky stage's overflow-hidden clips the rest.
-  const frameWidth = useTransform(progress, [0, 0.6], ["46vw", "430vw"]);
+  // aspect-ratio keeps it a landscape rectangle at any viewport shape. It
+  // grows gently while the wordmark is still readable, then bursts past
+  // 100vw so it always covers 100% of the viewport height too — the sticky
+  // stage's overflow-hidden clips the rest.
+  const frameVw = useTransform(progress, [0, 0.5, 0.62], [46, 100, 260]);
+  const frameWidth = useTransform(frameVw, (v) => `${v}vw`);
   const radius = useTransform(progress, [0, 0.6], [28, 0]);
   const overlayOpacity = useTransform(progress, [0, 0.35, 0.6], [0.35, 0.5, 0.78]);
 
-  const spread = useTransform(progress, [0, 0.42], [0, 1]);
-  const leftX = useTransform(spread, [0, 1], [0, -34]);
-  const rightX = useTransform(spread, [0, 1], [0, 34]);
+  // The words are pinned to the frame's edges from the very first frame (so
+  // the brand name reads immediately, not just after scrolling starts) and
+  // slide out in lockstep with the frame's own growth — one driving value,
+  // so the two can never feel out of sync.
+  const leftX = useTransform(frameVw, (v) => `${-(v / 2 + 4)}vw`);
+  const rightX = useTransform(frameVw, (v) => `${v / 2 + 4}vw`);
   const wordmarkOpacity = useTransform(progress, [0, 0.38, 0.56], [1, 1, 0]);
 
   const contentOpacity = useTransform(progress, [0.52, 0.72], [0, 1]);

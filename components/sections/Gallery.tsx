@@ -1,131 +1,56 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/lib/language-context";
 import { GALLERY } from "@/data/gallery";
-
-// Domino-topple formulas adapted from a saved 21st.dev "domino-gallery" component:
-// gravity-accelerated fall with a small bounce past flat, staggered per card.
-const OVERLAP = 0.45;
-const STAND_ANGLE = 86;
-
-function topple(t: number) {
-  if (t < 0.72) {
-    const u = t / 0.72;
-    return u * u;
-  }
-  const u = (t - 0.72) / 0.28;
-  return 1 + 0.06 * Math.sin(u * Math.PI) * (1 - u);
-}
-
-function clamp01(v: number) {
-  return v < 0 ? 0 : v > 1 ? 1 : v;
-}
-
-function cardWindow(progress: number, index: number, count: number) {
-  const win = 1 / (1 + OVERLAP * (count - 1));
-  const start = index * win * OVERLAP;
-  return clamp01((progress - start) / win);
-}
-
-function DominoCard({
-  item,
-  index,
-  count,
-  progress,
-  reduced,
-  onOpen,
-}: {
-  item: (typeof GALLERY)[number];
-  index: number;
-  count: number;
-  progress: ReturnType<typeof useSpring>;
-  reduced: boolean;
-  onOpen: () => void;
-}) {
-  const { lang } = useLanguage();
-  const fall = useTransform(progress, (p) => topple(cardWindow(p, index, count)));
-  const rotateX = useTransform(fall, (f) => STAND_ANGLE * (1 - f));
-  const liftY = useTransform(fall, (f) => (1 - f) * 18);
-  const glow = useTransform(fall, [0, 1], [0.15, 1]);
-
-  return (
-    <motion.button
-      type="button"
-      onClick={onOpen}
-      className="group relative shrink-0 overflow-hidden rounded-xl text-left"
-      style={{
-        width: "clamp(150px, 20vw, 230px)",
-        aspectRatio: "3 / 4",
-        transformOrigin: "50% -35%",
-        transformStyle: "preserve-3d",
-        rotateX: reduced ? 0 : rotateX,
-        y: reduced ? 0 : liftY,
-        opacity: reduced ? 1 : glow,
-      }}
-    >
-      <Image
-        src={item.src}
-        alt={item.name[lang]}
-        fill
-        sizes="230px"
-        className="object-cover transition-transform duration-500 group-hover:scale-105"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/10 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 p-3">
-        <p className="font-display text-[13px] font-bold text-cream">{item.name[lang]}</p>
-      </div>
-    </motion.button>
-  );
-}
 
 export default function Gallery() {
   const { t, lang } = useLanguage();
   const [active, setActive] = useState<number | null>(null);
-  const [reduced, setReduced] = useState(false);
-  const sectionRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setReduced(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 26, mass: 0.3 });
-  const sceneProgress = useTransform(progress, [0.18, 0.82], [0, 1]);
 
   return (
-    <section id="gallery" ref={sectionRef} className="section-pad bg-cream">
+    <section id="gallery" className="section-pad bg-cream">
       <div className="container-px mx-auto max-w-6xl">
-        <div className="max-w-xl">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.25em] text-gold">
-            {t.gallery.eyebrow}
-          </p>
-          <h2 className="font-display mt-3 text-[clamp(26px,3.6vw,40px)] font-extrabold leading-[1.1] text-ink">
-            {t.gallery.title}
-          </h2>
-          <p className="mt-3 text-[15px] leading-relaxed text-ink/65">{t.gallery.subtitle}</p>
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p className="text-[12px] font-semibold uppercase tracking-[0.25em] text-gold">
+              {t.gallery.eyebrow}
+            </p>
+            <h2 className="font-display mt-3 text-[clamp(26px,3.6vw,40px)] font-extrabold leading-[1.1] text-ink">
+              {t.gallery.title}
+            </h2>
+          </div>
+          <p className="max-w-xs text-[14px] leading-relaxed text-ink/60">{t.gallery.subtitle}</p>
         </div>
 
-        <div className="no-scrollbar mt-12 flex gap-4 overflow-x-auto pb-6 sm:gap-5" style={{ perspective: 1400 }}>
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
           {GALLERY.map((g, i) => (
-            <DominoCard
+            <motion.button
               key={g.id}
-              item={g}
-              index={i}
-              count={GALLERY.length}
-              progress={sceneProgress}
-              reduced={reduced}
-              onOpen={() => setActive(i)}
-            />
+              type="button"
+              onClick={() => setActive(i)}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.4, delay: (i % 3) * 0.07 }}
+              className="group relative aspect-[4/3] overflow-hidden rounded-xl text-left"
+            >
+              <Image
+                src={g.src}
+                alt={g.name[lang]}
+                fill
+                sizes="(max-width: 640px) 50vw, 33vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/0 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-3">
+                <p className="font-display text-[13px] font-bold text-cream sm:text-sm">
+                  {g.name[lang]}
+                </p>
+              </div>
+            </motion.button>
           ))}
         </div>
       </div>

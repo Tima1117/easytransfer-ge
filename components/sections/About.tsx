@@ -47,95 +47,98 @@ export default function About() {
   return (
     <section id="about" className="section-pad bg-ink text-cream">
       <div className="container-px mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+        <div className="max-w-2xl">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.25em] text-gold">
+            {t.about.eyebrow}
+          </p>
+          <motion.h2
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.5 }}
+            className="font-display mt-3 text-[clamp(26px,3.6vw,40px)] font-extrabold leading-[1.12]"
+          >
+            {t.about.title}
+          </motion.h2>
+          <p className="mt-5 text-[15px] leading-relaxed text-cream/70">{t.about.body}</p>
+        </div>
+
+        <div className="mt-9 grid grid-cols-2 gap-6 sm:grid-cols-4">
+          {t.about.stats.map((s, i) => (
+            <StatCounter key={i} value={s.value} label={s.label} delay={i * 0.08} />
+          ))}
+        </div>
+
+        <div className="mt-10 flex flex-wrap gap-x-12 gap-y-6">
           <div>
-            <p className="text-[12px] font-semibold uppercase tracking-[0.25em] text-gold">
-              {t.about.eyebrow}
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-cream/50">
+              {t.about.languagesLabel}
             </p>
-            <motion.h2
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.5 }}
-              className="font-display mt-3 text-[clamp(26px,3.6vw,40px)] font-extrabold leading-[1.12]"
-            >
-              {t.about.title}
-            </motion.h2>
-            <p className="mt-5 max-w-lg text-[15px] leading-relaxed text-cream/70">{t.about.body}</p>
-
-            <div className="mt-9 grid grid-cols-2 gap-6 sm:grid-cols-4">
-              {t.about.stats.map((s, i) => (
-                <StatCounter key={i} value={s.value} label={s.label} delay={i * 0.08} />
+            <div className="mt-3 flex flex-wrap gap-2">
+              {t.about.languages.map((l, i) => (
+                <span
+                  key={i}
+                  className="rounded-full border border-cream/20 px-3.5 py-1.5 text-[13px] text-cream/80"
+                >
+                  {l}
+                </span>
               ))}
-            </div>
-
-            <div className="mt-10">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-cream/50">
-                {t.about.languagesLabel}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {t.about.languages.map((l, i) => (
-                  <span
-                    key={i}
-                    className="rounded-full border border-cream/20 px-3.5 py-1.5 text-[13px] text-cream/80"
-                  >
-                    {l}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-7">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-cream/50">
-                {t.about.routesLabel}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {t.about.routes.map((r, i) => (
-                  <span
-                    key={i}
-                    className="rounded-full bg-cream/5 px-3.5 py-1.5 text-[13px] text-gold/90"
-                  >
-                    {r}
-                  </span>
-                ))}
-              </div>
             </div>
           </div>
 
           <div>
-            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-cream/50">
-              {t.about.fleetLabel}
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-cream/50">
+              {t.about.routesLabel}
             </p>
-            <div className="flex flex-col gap-3">
-              {t.about.fleet.map((f, i) => (
-                <motion.div
-                  key={f.name}
-                  initial={{ opacity: 0, x: 16 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.45, delay: i * 0.08 }}
-                  className="group relative flex items-center gap-4 overflow-hidden rounded-xl border border-cream/12 bg-cream/[0.04] p-3"
+            <div className="mt-3 flex flex-wrap gap-2">
+              {t.about.routes.map((r, i) => (
+                <span
+                  key={i}
+                  className="rounded-full bg-cream/5 px-3.5 py-1.5 text-[13px] text-gold/90"
                 >
-                  <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-lg">
-                    <Image
-                      src={f.photo}
-                      alt={f.name}
-                      fill
-                      sizes="112px"
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-display truncate text-base font-bold text-cream">{f.name}</p>
+                  {r}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-14">
+          <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.2em] text-cream/50">
+            {t.about.fleetLabel}
+          </p>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+            {t.about.fleet.map((f, i) => (
+              <motion.div
+                key={f.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.45, delay: i * 0.08 }}
+                className="group overflow-hidden rounded-2xl border border-cream/12 bg-cream/[0.04]"
+              >
+                <div className="relative aspect-[4/3] w-full overflow-hidden">
+                  <Image
+                    src={f.photo}
+                    alt={f.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
+                </div>
+                <div className="flex items-center justify-between p-4">
+                  <div>
+                    <p className="font-display text-base font-bold text-cream">{f.name}</p>
                     <p className="mt-0.5 text-[12px] uppercase tracking-wide text-gold/80">{f.cls}</p>
                   </div>
-                  <div className="shrink-0 text-right text-[11.5px] leading-snug text-cream/60">
+                  <div className="text-right text-[12px] leading-snug text-cream/60">
                     <p>{f.seats}</p>
                     <p>{f.bags}</p>
                   </div>
-                </motion.div>
-              ))}
-            </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>
